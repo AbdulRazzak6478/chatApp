@@ -5,36 +5,35 @@ const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
-
+path = require('path');
 // app.get('/', (req, res) => {
 //   res.sendFile(__dirname + '/public/index.html');
 // });
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-app.use('/',express.static(__dirname + '/public')) // works
+app.set('view engine','ejs');
 
 io.on('connection', (socket) => {
   console.log('a user connected',socket.id);
 
-    // socket.on('from_client',()=>{
-    //     console.log('message recieved from the client');
-    // })
-    
-    // setInterval(()=>{
-    //     socket.emit('from_server');
-    // },4000)
+  socket.on('join_room',(data)=>{
+    console.log('joining room ',data.roomid);
+    socket.join(data.roomid);
+  })
 
-    socket.on('new_msg',(data)=>{
-        io.emit('msg_rcvd',data);
-        // socket.emit('msg_rcvd',data);
-        // socket.broadcast.emit('msg_rcvd',data);
-    });
+  socket.on('new_msg',(data)=>{
+    console.log('new message',data);
+      io.to(data.roomid).emit('msg_rcvd',data);
+  });
 
   socket.on('disconnect',()=>{
     console.log('user Disconnected ',socket.id);
   })
+});
+
+app.get('/chat/:roomid/:user',async (req, res) =>{
+  res.render('index',{roomid: req.params.roomid,user : req.params.user})
 });
 
 server.listen(ServerConfig.PORT,async()=>{

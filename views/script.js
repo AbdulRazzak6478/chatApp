@@ -1,6 +1,4 @@
-
-document.addEventListener('DOMContentLoaded',()=>{
-    console.log('js file connected');
+console.log('js file connected');
 
     var socket = io();
     let input = document.getElementById('chat_box');
@@ -22,5 +20,3 @@ document.addEventListener('DOMContentLoaded',()=>{
         li.textContent = data.message;
         msgList.appendChild(li);
     })
-});
-

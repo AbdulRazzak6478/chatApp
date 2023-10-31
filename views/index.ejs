@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    Hi there lets Learn Web socket through socket.io
+    <!-- <button id="btn">click</button>
+    <div id="from_server"></div> -->
+
+    <h3>Chatting ... inside <%= roomid %></h3>
+
+    <input type="text" id="chat_box" />
+    <button id="send">Send</button>
+    <ul id="msg_list"></ul>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <!-- <script src="script.js"></script> -->
+    <script>
+      console.log("js file connected");
+
+      var socket = io();
+      let input = document.getElementById("chat_box");
+      let btn = document.getElementById("send");
+      let msgList = document.getElementById("msg_list");
+      // whenever we render the page we join room
+      socket.emit("join_room", {
+        roomid: "<%= roomid %>",
+      });
+      btn.addEventListener("click", () => {
+        let msg = input.value;
+        socket.emit("new_msg", {
+          roomid : "<%= roomid %>",
+          sender: '<%= user %>',
+          message: msg,
+        });
+        input.value = "";
+      });
+      socket.on("msg_rcvd", (data) => {
+        let li = document.createElement("li");
+        li.textContent = data.sender +" =  " + data.message;
+        msgList.appendChild(li);
+      });
+    </script>
+  </body>
+</html>
