@@ -10,11 +10,15 @@
     <!-- <button id="btn">click</button>
     <div id="from_server"></div> -->
 
-    <h3>Chatting ... inside <%= roomid %></h3>
+    <h3>Chatting ... inside <%= groupName %></h3>
 
     <input type="text" id="chat_box" />
     <button id="send">Send</button>
-    <ul id="msg_list"></ul>
+    <ul id="msg_list">
+      <% for ( let i=0;i<previousMsgs.length ; i++)  {%>
+        <li> <%= previousMsgs[i].sender %> = <%= previousMsgs[i].content %></li>
+        <% } %>
+    </ul>
 
     <script src="/socket.io/socket.io.js"></script>
     <!-- <script src="script.js"></script> -->
